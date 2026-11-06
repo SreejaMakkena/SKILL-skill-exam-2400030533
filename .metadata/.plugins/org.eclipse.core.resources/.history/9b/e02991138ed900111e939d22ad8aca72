@@ -1,0 +1,12 @@
+package com.klef.soa.exam.repository;
+
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.klef.soa.exam.entity.PhotographyPackage;
+
+public interface PhotographyPackageRepository extends JpaRepository<PhotographyPackage, Long> 
+{
+    List<PhotographyPackage> findByPackageName(String packageName);
+
+    List<PhotographyPackage> findByPriceLessThan(double price);
+}

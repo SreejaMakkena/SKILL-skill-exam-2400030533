@@ -1,0 +1,92 @@
+
+package com.klef.soa.exam.repository;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+
+import com.klef.soa.exam.entity.Medicine;
+
+@DataJpaTest
+class MedicineRepositoryTest {
+
+    @Autowired
+    private MedicineRepository repository;
+
+    private Medicine medicine;
+
+    @BeforeEach
+    void setup() {
+        repository.deleteAll();
+
+        medicine = new Medicine();
+        medicine.setMedicineName("Paracetamol");
+        medicine.setCompany("ABC Pharma");
+        medicine.setExpiryDate(LocalDate.of(2027, 12, 31));
+        medicine.setPrice(50.0);
+        medicine.setStock(100);
+
+        medicine = repository.saveAndFlush(medicine);
+    }
+
+    // Test 1 - Find All
+    @Test
+    void testFindAll() {
+        List<Medicine> medicines = repository.findAll();
+
+        assertNotNull(medicines);
+        assertEquals(1, medicines.size());
+    }
+
+    // Test 2 - Find By ID
+    @Test
+    void testFindById() {
+        Medicine found = repository.findById(
+                medicine.getMedicineId()).orElse(null);
+
+        assertNotNull(found);
+        assertEquals(medicine.getMedicineId(),
+                     found.getMedicineId());
+
+        assertTrue(repository.findById(-1L).isEmpty());
+    }
+
+    // Test 3 - Derived Query
+    @Test
+    void testDerivedQuery() {
+        List<Medicine> result =
+                repository.findByMedicineName("Paracetamol");
+
+        assertFalse(result.isEmpty());
+        assertEquals("Paracetamol",
+                     result.get(0).getMedicineName());
+    }
+
+    // Test 4 - Count
+    @Test
+    void testCount() {
+        long count = repository.count();
+
+        assertEquals(1, count);
+    }
+
+    // Test 5 - Entity Details
+    @Test
+    void testEntityDetails() {
+        Medicine found = repository.findById(
+                medicine.getMedicineId()).orElseThrow();
+
+        assertNotNull(found.getMedicineName());
+        assertNotNull(found.getCompany());
+        assertNotNull(found.getExpiryDate());
+
+        assertEquals(50.0, found.getPrice());
+        assertEquals(100, found.getStock());
+    }
+}

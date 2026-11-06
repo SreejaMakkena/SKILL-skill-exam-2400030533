@@ -1,0 +1,62 @@
+
+package com.klef.soa.exam.service;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.klef.soa.exam.entity.PhotographyPackage;
+import com.klef.soa.exam.repository.PhotographyPackageRepository;
+
+@Service
+public class PhotographyPackageServiceImpl implements PhotographyPackageService
+{
+    @Autowired
+    private PhotographyPackageRepository repository;
+
+    @Override
+    public PhotographyPackage add(PhotographyPackage p) {
+        return repository.save(p);
+    }
+
+    @Override
+    public List<PhotographyPackage> displayAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public PhotographyPackage displayById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() ->
+                    new RuntimeException("Package not found: " + id));
+    }
+
+    @Override
+    public PhotographyPackage update(Long id, PhotographyPackage p) {
+        PhotographyPackage existing = displayById(id);
+
+        existing.setPackageName(p.getPackageName());
+        existing.setHoursIncluded(p.getHoursIncluded());
+        existing.setPrice(p.getPrice());
+        existing.setIncludesAlbum(p.getIncludesAlbum());
+
+        return repository.save(existing);
+    }
+
+    @Override
+    public String delete(Long id) {
+        PhotographyPackage p = displayById(id);
+        repository.delete(p);
+        return "Photography Package deleted successfully";
+    }
+
+    @Override
+    public List<PhotographyPackage> findByPackageName(String name) {
+        return repository.findByPackageName(name);
+    }
+
+    @Override
+    public List<PhotographyPackage> findByPriceLessThan(double price) {
+        return repository.findByPriceLessThan(price);
+    }
+}

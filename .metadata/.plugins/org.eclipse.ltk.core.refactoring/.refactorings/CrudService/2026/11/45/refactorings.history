@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename compilation unit &apos;com.klef.soa.exam.service.PhotographyPackageServiceImpl.java&apos; to &apos;MedicineServiceImpl.java&apos;&#x0D;&#x0A;- Original project: &apos;CrudService&apos;&#x0D;&#x0A;- Original element: &apos;com.klef.soa.exam.service.PhotographyPackageServiceImpl.java&apos;&#x0D;&#x0A;- Renamed element: &apos;com.klef.soa.exam.service.MedicineServiceImpl.java&apos;" description="Rename compilation unit &apos;PhotographyPackageServiceImpl.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.klef.soa.exam.service{PhotographyPackageServiceImpl.java" name="MedicineServiceImpl.java" references="false" stamp="1793934134424" version="1.0"/>
+</session>

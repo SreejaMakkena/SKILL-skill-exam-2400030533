@@ -1,0 +1,82 @@
+package com.klef.soa.exam.service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.klef.soa.entity.Medicine;
+import com.klef.soa.repository.MedicineRepository;
+
+@Service
+public class MedicineServiceImpl implements MedicineService
+{
+    @Autowired
+    private MedicineRepository repository;
+
+    @Override
+    public Medicine addMedicine(Medicine medicine)
+    {
+        return repository.save(medicine);
+    }
+
+    @Override
+    public Medicine updateMedicine(Medicine medicine)
+    {
+        Optional<Medicine> optional =
+                repository.findById(medicine.getMedicineId());
+
+        if (optional.isPresent())
+        {
+            Medicine existingMedicine = optional.get();
+
+            existingMedicine.setMedicineName(medicine.getMedicineName());
+            existingMedicine.setCompany(medicine.getCompany());
+            existingMedicine.setExpiryDate(medicine.getExpiryDate());
+            existingMedicine.setPrice(medicine.getPrice());
+            existingMedicine.setStock(medicine.getStock());
+
+            return repository.save(existingMedicine);
+        }
+
+        return null;
+    }
+
+    @Override
+    public String deleteMedicineById(Long medicineId)
+    {
+        if (repository.existsById(medicineId))
+        {
+            repository.deleteById(medicineId);
+            return "Medicine Deleted Successfully";
+        }
+
+        return "Medicine ID Not Found";
+    }
+
+    @Override
+    public List<Medicine> displayAllMedicines()
+    {
+        return repository.findAll();
+    }
+
+    @Override
+    public Medicine displayMedicineById(Long medicineId)
+    {
+        return repository.findById(medicineId).orElse(null);
+    }
+
+    @Override
+    public List<Medicine> displayMedicinesByCompany(String company)
+    {
+        return repository.findByCompany(company);
+    }
+
+    @Override
+    public List<Medicine> displayMedicinesByExpiryDate(LocalDate expiryDate)
+    {
+        return repository.findByExpiryDate(expiryDate);
+    }
+}

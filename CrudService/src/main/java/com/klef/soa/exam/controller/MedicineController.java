@@ -1,0 +1,119 @@
+package com.klef.soa.exam.controller;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.klef.soa.exam.entity.Medicine;
+import com.klef.soa.exam.service.MedicineService;
+@RestController
+@RequestMapping("/medicine")
+public class MedicineController
+{
+    @Autowired
+    private MedicineService service;
+
+    @GetMapping("/")
+    public String demo()
+    {
+        return "Medicine REST API Spring Boot Project";
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<Medicine> addMedicine(
+            @RequestBody Medicine medicine)
+    {
+        Medicine savedMedicine = service.addMedicine(medicine);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(savedMedicine);
+    }
+
+    @GetMapping("/displayall")
+    public ResponseEntity<List<Medicine>> displayAllMedicines()
+    {
+        List<Medicine> medicines = service.displayAllMedicines();
+
+        return ResponseEntity.ok(medicines);
+    }
+
+    @GetMapping("/display")
+    public ResponseEntity<?> displayMedicineById(
+            @RequestParam Long medicineId)
+    {
+        Medicine medicine =
+                service.displayMedicineById(medicineId);
+
+        if (medicine != null)
+        {
+            return ResponseEntity.ok(medicine);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Medicine ID Not Found");
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateMedicine(
+            @RequestBody Medicine medicine)
+    {
+        Medicine updatedMedicine =
+                service.updateMedicine(medicine);
+
+        if (updatedMedicine != null)
+        {
+            return ResponseEntity.ok(updatedMedicine);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("Medicine ID Not Found");
+    }
+
+    // Delete Medicine By ID
+    @DeleteMapping("/delete/{medicineId}")
+    public ResponseEntity<String> deleteMedicineById(
+            @PathVariable Long medicineId)
+    {
+        String message =
+                service.deleteMedicineById(medicineId);
+
+        if (message.equals("Medicine ID Not Found"))
+        {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(message);
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/displaybycompany/{company}")
+    public ResponseEntity<List<Medicine>> displayMedicinesByCompany(
+            @PathVariable String company)
+    {
+        List<Medicine> medicines =
+                service.displayMedicinesByCompany(company);
+
+        return ResponseEntity.ok(medicines);
+    }
+
+    @GetMapping("/displaybyexpirydate")
+    public ResponseEntity<List<Medicine>> displayMedicinesByExpiryDate(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate expiryDate)
+    {
+        List<Medicine> medicines =
+                service.displayMedicinesByExpiryDate(expiryDate);
+
+        return ResponseEntity.ok(medicines);
+    }
+}

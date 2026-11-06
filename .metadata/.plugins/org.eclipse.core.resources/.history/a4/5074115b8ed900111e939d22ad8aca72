@@ -1,0 +1,21 @@
+package com.klef.soa.exam.service;
+
+import java.util.List;
+import com.klef.soa.exam.entity.PhotographyPackage;
+
+public interface PhotographyPackageService 
+{
+    PhotographyPackage add(PhotographyPackage p);
+
+    List<PhotographyPackage> displayAll();
+
+    PhotographyPackage displayById(Long id);
+
+    PhotographyPackage update(Long id, PhotographyPackage p);
+
+    String delete(Long id);
+
+    List<PhotographyPackage> findByPackageName(String name);
+
+    List<PhotographyPackage> findByPriceLessThan(double price);
+}

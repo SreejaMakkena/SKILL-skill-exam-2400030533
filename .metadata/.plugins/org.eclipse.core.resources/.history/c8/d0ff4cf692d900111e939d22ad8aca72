@@ -1,0 +1,86 @@
+
+package com.klef.soa.exam.repository;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+
+import com.klef.soa.exam.entity.Medicine;
+
+@DataJpaTest
+class MedicineRepositoryTest {
+
+    @Autowired
+    private MedicineRepository repository;
+
+    private Medicine medicine;
+
+    @BeforeEach
+    void setup() {
+        repository.deleteAll();
+
+        medicine = new Medicine();
+        medicine.setMedicineName("Paracetamol");
+        medicine.setCompany("ABC Pharma");
+        medicine.setExpiryDate(LocalDate.of(2027, 12, 31));
+        medicine.setPrice(50.0);
+        medicine.setStock(100);
+
+        medicine = repository.saveAndFlush(medicine);
+    }
+
+    @Test
+    void testFindAll() {
+        List<Medicine> medicines = repository.findAll();
+
+        assertNotNull(medicines);
+        assertEquals(1, medicines.size());
+    }
+
+    @Test
+    void testFindById() {
+        Medicine found = repository.findById(
+                medicine.getMedicineId()).orElse(null);
+
+        assertNotNull(found);
+        assertEquals(medicine.getMedicineId(),
+                     found.getMedicineId());
+
+        assertTrue(repository.findById(-1L).isEmpty());
+    }
+
+    @Test
+    void testDerivedQuery() {
+        List<Medicine> result =
+                repository.findByCompany("ABC Pharma");
+
+        assertFalse(result.isEmpty());
+        assertEquals("ABC Pharma", result.get(0).getCompany());
+    }
+
+    @Test
+    void testCount() {
+        long count = repository.count();
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    void testEntityDetails() {
+        Medicine found = repository.findById(
+                medicine.getMedicineId()).orElseThrow();
+
+        assertNotNull(found.getMedicineName());
+        assertNotNull(found.getCompany());
+        assertNotNull(found.getExpiryDate());
+
+        assertEquals(50.0, found.getPrice());
+        assertEquals(100, found.getStock());
+    }
+}

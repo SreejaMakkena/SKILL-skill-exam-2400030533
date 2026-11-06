@@ -1,0 +1,23 @@
+package com.klef.soa.service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.klef.soa.entity.Medicine;
+
+public interface MedicineService
+{
+    Medicine addMedicine(Medicine medicine);
+
+    Medicine updateMedicine(Medicine medicine);
+
+    String deleteMedicineById(Long medicineId);
+
+    List<Medicine> displayAllMedicines();
+
+    Medicine displayMedicineById(Long medicineId);
+
+    List<Medicine> displayMedicinesByCompany(String company);
+
+    List<Medicine> displayMedicinesByExpiryDate(LocalDate expiryDate);
+}
